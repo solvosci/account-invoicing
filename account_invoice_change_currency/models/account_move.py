@@ -58,7 +58,10 @@ class AccountMove(models.Model):
                     invoice.company_id,
                     invoice_date,
                 )
-            invoice._recompute_dynamic_lines(recompute_all_taxes=True)
+                # TODO test with discounts
+                line.credit = line.price_subtotal
+            # invoice._recompute_dynamic_lines(recompute_all_taxes=True)
+            invoice.with_context(**context)._recompute_dynamic_lines(recompute_all_taxes=True)
 
     @api.depends("company_id", "currency_id", "invoice_date")
     def _compute_currency_change_rate(self):
